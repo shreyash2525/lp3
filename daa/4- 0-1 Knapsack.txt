@@ -1,32 +1,32 @@
-#include<iostream>
+#include <iostream>
+#include <vector>
 
 using namespace std;
 
-int main(){
-    int capacity = 10;
-    int items = 4;
-    int price[items + 1] = {0, 3, 7, 2, 9};
-    int wt[items + 1] = {0, 2, 2, 4, 5};
-    int dp[items + 1][capacity + 1];
-    
-    for(int i = 0; i <= items; i++){
-        for(int j = 0; j <= capacity; j++){
-            if(i == 0 || j == 0){
-                //There's nothing to add to Knapsack
-                dp[i][j] = 0;
-            }
-            else if(wt[i] <= j){
-                //Choose previously maximum or value of current item + value of remaining weight
-                dp[i][j] = max(dp[i - 1][j], price[i] + dp[i - 1][j - wt[i]]);
-            }
-            else{
-                //Add previously added item to knapsack
-                dp[i][j] = dp[i - 1][j];
+int knapsack(int capacity, vector<int>& weights, vector<int>& values, int n) {
+    vector<vector<int>> dp(n + 1, vector<int>(capacity + 1, 0));
+
+    for (int i = 1; i <= n; i++) {
+        for (int w = 1; w <= capacity; w++) {
+            if (weights[i - 1] > w) {
+                dp[i][w] = dp[i - 1][w];
+            } else {
+                dp[i][w] = max(dp[i - 1][w], values[i - 1] + dp[i - 1][w - weights[i - 1]]);
             }
         }
     }
-	
 
-    cout << "Maximum Profit Earned: " << dp[items][capacity] << "\n";
+    return dp[n][capacity];
+}
+
+int main() {
+    vector<int> values = {60, 100, 120};
+    vector<int> weights = {10, 20, 30};
+    int capacity = 50;
+    int n = values.size();
+
+    int maxValue = knapsack(capacity, weights, values, n);
+    cout << "Maximum value: " << maxValue << endl;
+
     return 0;
 }
