@@ -1,0 +1,5 @@
+gedit filename.cpp
+
+g++ filename.cpp
+
+./a.out
